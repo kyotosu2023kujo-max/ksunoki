@@ -25,12 +25,16 @@ def run_rakuten_poi():
         print("楽天ログインページにアクセス中...")
         driver.get("https://point.rakuten.co.jp/guidance/login/")
         
-        # ログイン処理
-        wait.until(EC.presence_of_element_located((By.ID,"loginInner_u"))).send_keys(USER_ID)
-        driver.find_element(By.ID, "loginInner_p").send_keys(PASSWORD)
+        time.sleep(3) # 少し待つ
+        print(f"★現在開いているページ: {driver.title}") # 観測用のログ
+        
+        # ログイン処理（入力欄の名前を "u" と "p" に変更）
+        wait.until(EC.presence_of_element_located((By.ID, "u"))).send_keys(USER_ID)
+        driver.find_element(By.ID, "p").send_keys(PASSWORD)
         driver.find_element(By.NAME, "submit").click()
         print("ログインに成功しました。")
         
+        time.sleep(5) # ログイン後の安定待ち
         time.sleep(5) # ログイン後の安定待ち
 
         # ポイントミッション（ポチポチページ）へ
