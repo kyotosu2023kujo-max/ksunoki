@@ -1,0 +1,29 @@
+name: Rakuten Auto Poi
+
+on:
+  schedule:
+    # 毎日 日本時間 21:00 (UTC 12:00) に実行
+    - cron: '0 12 * * *'
+  workflow_dispatch: # 手動で動かすためのボタンを作る設定
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python_version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install selenium webdriver-manager
+
+      - name: Run script
+        env:
+          RAKUTEN_USER_ID: ${{ secrets.RAKUTEN_USER_ID }}
+          RAKUTEN_PASSWORD: ${{ secrets.RAKUTEN_PASSWORD }}
+        run: python rakuten_poi.py
