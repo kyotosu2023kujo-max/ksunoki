@@ -15,7 +15,7 @@ def run_rakuten_poi():
     
     try:
         # 1. 楽天ログインページ（一例）
-        driver.get("https://pointi.rakuten.co.jp/guidance/login/")
+        driver.get("https://point.rakuten.co.jp/guidance/login/")
         print("ページにアクセスしました。")
         
         # --- ここで本来はログイン処理を行いますが、 ---
