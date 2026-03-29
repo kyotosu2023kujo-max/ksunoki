@@ -9,8 +9,8 @@ from selenium.common.exceptions import NoSuchElementException
 
 def run_kuji():
     # 1. GitHub Secrets からログイン情報を取得
-    USER_ID = os.environ.get('RAKUTEN_ID')
-    USER_PASS = os.environ.get('RAKUTEN_PASS')
+    USER_ID = os.environ.get('RAKUTEN_USER_ID')
+    USER_PASS = os.environ.get('RAKUTEN_PASSWORD')
 
     if not USER_ID or not USER_PASS:
         print("Error: RAKUTEN_ID or RAKUTEN_PASS is not set in Secrets.")
