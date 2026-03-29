@@ -26,7 +26,7 @@ def run_rakuten_poi():
         driver.get("https://point.rakuten.co.jp/guidance/login/")
         
         # ログイン処理
-        wait.until(EC.presence_of_element_located("loginInner_u")).send_keys(USER_ID)
+        wait.until(EC.presence_of_element_located((By.ID,"loginInner_u")).send_keys(USER_ID)
         driver.find_element(By.ID, "loginInner_p").send_keys(PASSWORD)
         driver.find_element(By.NAME, "submit").click()
         print("ログインに成功しました。")
