@@ -26,4 +26,4 @@ jobs:
         env:
           RAKUTEN_USER_ID: ${{ secrets.RAKUTEN_USER_ID }}
           RAKUTEN_PASSWORD: ${{ secrets.RAKUTEN_PASSWORD }}
-        run: python rakuten_poi.py
+        run: python rakuten_poi2.py
