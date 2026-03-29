@@ -22,7 +22,6 @@ def run_rakuten_search():
     driver = webdriver.Chrome(options=options)
     wait = WebDriverWait(driver, 20)
 
-    # 物理学徒向けの検索ワードリスト（毎日ここからランダムに30個選ばれます）
     search_words = [
         "量子力学", "シュレーディンガーの猫", "相対性理論", "ブラックホール", "エントロピー",
         "素粒子", "クォーク", "ダークマター", "ダークエネルギー", "超ひも理論",
@@ -33,36 +32,36 @@ def run_rakuten_search():
         "重力波", "中性子星", "白色矮星", "事象の地平面", "ビッグバン"
     ]
     random.shuffle(search_words)
-    targets = search_words[:30] # 30回分を抽出
+    targets = search_words[:30]
 
     try:
-        print("1. ログイン処理を開始します...")
-        driver.get("https://point.rakuten.co.jp/history/")
-        time.sleep(5)
+        print("1. 楽天の共通ログインゲートに突入します...")
+        # 楽天の最も確実な大元ログインURL
+        driver.get("https://grp02.id.rakuten.co.jp/rms/nid/vc")
+        time.sleep(3)
         
-        # ログイン画面の判定と突破
-        if "id.rakuten.co.jp" in driver.current_url:
-            print("2. ログイン画面にて認証中...")
+        print("2. IDとパスワードを入力します...")
+        # PC版・スマホ版どちらの画面が出ても対応できるハイブリッド入力
+        try:
+            wait.until(EC.presence_of_element_located((By.ID, "loginInner_u"))).send_keys(USER_ID)
+            driver.find_element(By.ID, "loginInner_p").send_keys(PASSWORD)
+            print("→ [スマホ版レイアウト] を検知・入力しました")
+        except:
             wait.until(EC.presence_of_element_located((By.ID, "u"))).send_keys(USER_ID)
             driver.find_element(By.ID, "p").send_keys(PASSWORD)
-            driver.find_element(By.NAME, "submit").click()
-            time.sleep(5)
-            print("ログイン成功！")
-        else:
-            print("既にログイン状態です。")
+            print("→ [PC版レイアウト] を検知・入力しました")
+            
+        driver.find_element(By.NAME, "submit").click()
+        print("ログイン成功！譲太郎さんのアカウントで入室しました。")
+        time.sleep(5)
 
         print("3. 楽天ウェブ検索での自動検索（30回）を開始します...")
-        
         for i, word in enumerate(targets):
-            # 検索URLを直接組み立ててアクセスする
             encoded_word = urllib.parse.quote(word)
             search_url = f"https://websearch.rakuten.co.jp/Web?qt={encoded_word}"
-            
             driver.get(search_url)
             print(f"[{i+1}/30] 検索完了: {word}")
-            
-            # ロボット検知を避けるため、5〜10秒の間でランダムに待機（人間らしさの演出）
-            time.sleep(random.uniform(5, 10))
+            time.sleep(random.uniform(5, 8)) # 人間らしいランダム待機
 
         print("🎉 本日のウェブ検索ミッション（30回）を完了しました！")
 
