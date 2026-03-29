@@ -1,12 +1,12 @@
 import os
 import time
 import random
-import urllib.parse
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys # エンターキーを押すための部品
 
 options = Options()
 options.add_argument('--headless=new')
@@ -36,32 +36,36 @@ def run_rakuten_search():
 
     try:
         print("1. 楽天の共通ログインゲートに突入します...")
-        # 楽天の最も確実な大元ログインURL
         driver.get("https://grp02.id.rakuten.co.jp/rms/nid/vc")
         time.sleep(3)
         
         print("2. IDとパスワードを入力します...")
-        # PC版・スマホ版どちらの画面が出ても対応できるハイブリッド入力
         try:
             wait.until(EC.presence_of_element_located((By.ID, "loginInner_u"))).send_keys(USER_ID)
             driver.find_element(By.ID, "loginInner_p").send_keys(PASSWORD)
-            print("→ [スマホ版レイアウト] を検知・入力しました")
         except:
             wait.until(EC.presence_of_element_located((By.ID, "u"))).send_keys(USER_ID)
             driver.find_element(By.ID, "p").send_keys(PASSWORD)
-            print("→ [PC版レイアウト] を検知・入力しました")
             
         driver.find_element(By.NAME, "submit").click()
-        print("ログイン成功！譲太郎さんのアカウントで入室しました。")
+        print("ログイン成功！")
         time.sleep(5)
 
-        print("3. 楽天ウェブ検索での自動検索（30回）を開始します...")
+        print("3. 正門（トップページ）からの人間らしい検索を開始します...")
+        
         for i, word in enumerate(targets):
-            encoded_word = urllib.parse.quote(word)
-            search_url = f"https://websearch.rakuten.co.jp/Web?qt={encoded_word}"
-            driver.get(search_url)
-            print(f"[{i+1}/30] 検索完了: {word}")
-            time.sleep(random.uniform(5, 8)) # 人間らしいランダム待機
+            # 毎回ちゃんとトップページを開く
+            driver.get("https://websearch.rakuten.co.jp/")
+            time.sleep(3)
+            
+            # 検索窓（name="qt"）を見つけて、文字を入れてエンターキーを押す
+            search_box = wait.until(EC.presence_of_element_located((By.NAME, "qt")))
+            search_box.clear()
+            search_box.send_keys(word)
+            search_box.send_keys(Keys.RETURN) # エンターキーをターン！
+            
+            print(f"[{i+1}/30] 正門から検索完了: {word}")
+            time.sleep(random.uniform(5, 8)) 
 
         print("🎉 本日のウェブ検索ミッション（30回）を完了しました！")
 
